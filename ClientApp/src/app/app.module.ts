@@ -15,6 +15,7 @@ import { BackendApiService } from './services/backend-api.service';
 import { BytesPipe } from './pipes/bytes.pipe';
 import { ChartsModule } from 'ng2-charts';
 import { FooterComponent } from './components/footer/footer.component';
+import { CompactStatisticsComponent } from './components/compact-statistics/compact-statistics.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { FooterComponent } from './components/footer/footer.component';
     PeerListComponent,
     BandUsageComponent,
     BytesPipe,
-    FooterComponent
+    FooterComponent,
+    CompactStatisticsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
