@@ -1,0 +1,29 @@
+<div class="table-responsive">
+  <table class="table table-striped table-responsive">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>EndPoint</th>
+        <th>Connected At</th>
+        <th>User Agent</th>
+        <th>Version</th>
+        <th>Read</th>
+        <th>Write</th>
+        <th>Info</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let peer of connectedPeers;let i=index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{peer.endPoint}}</td>
+        <td>{{peer.connectedAt}}</td>
+        <td>{{peer.peerUserAgent}}</td>
+        <td>{{peer.peerVersion}}</td>
+        <td>{{peer.read | bytes}}</td>
+        <td>{{peer.written| bytes}}</td>
+        <td [attr.data-ip]="peer.endPointAddress"><span class="fa fa-info-circle"></span></td>
+      </tr>
+      <!--http://freegeoip.net/json/::ffff:98.229.139.101-->
+    </tbody>
+  </table>
+</div>
