@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { PeerInfo } from '../models/peer-info';
 import { BandUsage } from '../models/band-usage';
+import { BasicStatistics } from '../models/basic-statistics';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,8 +18,11 @@ export class BackendApiService {
   private _connectedPeers = new BehaviorSubject<PeerInfo[]>([]);
   connectedPeers = () => this._connectedPeers.asObservable();
 
-  private _bandUsage = new BehaviorSubject<BandUsage>({ received: 0, sent: 0 });
+  private _bandUsage = new BehaviorSubject<BandUsage>(new BandUsage());
   bandUsage = () => this._bandUsage.asObservable();
+
+  private _basicStatistics = new BehaviorSubject<BasicStatistics>(new BasicStatistics());
+  basicStatistics = () => this._basicStatistics.asObservable();
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private apiUrl: string) {
     this.apiUrl += 'api/Data/';
@@ -34,6 +38,10 @@ export class BackendApiService {
 
     this._periodicRefreshesDictionary.push(new PeriodicRefreshableCall("bandUsage", 5000, () => {
       this.getBandUsage();
+    }));
+
+    this._periodicRefreshesDictionary.push(new PeriodicRefreshableCall("basicStatistics", 5000, () => {
+      this.getBasicStatistics();
     }));
   }
 
@@ -56,6 +64,15 @@ export class BackendApiService {
     this.http.get<BandUsage>(this.apiUrl + "BandStatistics")
       .subscribe(res => {
         this._bandUsage.next(res);
+      }, error => console.error(error));
+  }
+
+  getBasicStatistics() {
+    console.debug("getting basic statistics");
+
+    this.http.get<BasicStatistics>(this.apiUrl + "BasicStatistics")
+      .subscribe(res => {
+        this._basicStatistics.next(res);
       }, error => console.error(error));
   }
 }

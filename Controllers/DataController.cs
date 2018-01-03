@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NBitcoin;
 using Stratis.Bitcoin;
 using Stratis.Bitcoin.Connection;
+using Stratis.Bitcoin.Features.BlockStore;
+using Stratis.Bitcoin.Features.MemoryPool;
+using Stratis.Bitcoin.Interfaces;
 using Stratis.Bitcoin.Utilities;
 using Stratis.Dashboard.Models;
 
@@ -15,14 +19,20 @@ namespace Stratis.Dashboard.Controllers
 	{
 		private IFullNode node;
 		private IConnectionManager connectionManager;
+		private ConcurrentChain chain;
+		private MempoolManager mempoolManager;
 
-		public DataController(IFullNode node, IConnectionManager connectionManager)
+		public DataController(IFullNode node, IConnectionManager connectionManager, ConcurrentChain chain, MempoolManager mempoolManager)
 		{
 			this.node = node;
 			this.connectionManager = connectionManager;
+			this.chain = chain;
+			this.mempoolManager = mempoolManager;
 
 			Guard.NotNull(node, nameof(node));
-			Guard.NotNull(connectionManager, nameof(ConnectionManager));
+			Guard.NotNull(connectionManager, nameof(connectionManager));
+			Guard.NotNull(chain, nameof(chain));
+			Guard.NotNull(mempoolManager, nameof(mempoolManager));
 		}
 
 
@@ -64,6 +74,20 @@ namespace Stratis.Dashboard.Controllers
 		  );
 
 			return statistics;
+		}
+
+
+		[HttpGet("[action]")]
+		public BasicStatistics BasicStatistics()
+		{
+			var basicStatistics = new BasicStatistics
+			{
+				ConnectedPeers = this.connectionManager.ConnectedNodes.Count(),
+				CurrentHeight = this.chain.Height,
+				MemPoolTransactionsCount = this.mempoolManager.PerformanceCounter.MempoolSize
+			};
+
+			return basicStatistics;
 		}
 	}
 }

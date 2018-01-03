@@ -15,7 +15,7 @@ import { BackendApiService } from './services/backend-api.service';
 import { BytesPipe } from './pipes/bytes.pipe';
 import { ChartsModule } from 'ng2-charts';
 import { FooterComponent } from './components/footer/footer.component';
-import { CompactStatisticsComponent } from './components/compact-statistics/compact-statistics.component';
+import { CompactStatisticsComponent } from './components/Statistic/compact-statistics/compact-statistics.component';
 
 @NgModule({
   declarations: [
